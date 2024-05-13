@@ -16,10 +16,11 @@ import java.util.List;
 public interface MessageService {
     Message createMessage(SendMessageRequest request) throws UserException, ChatException;
 
-    List<Message> getChatMessages(Long chatId,User reguser) throws ChatException;
+    List<Message> getChatMessages(Long chatId,User reguser) throws ChatException, UserException;
 
     void deleteMessage(Long msgid) throws MessageException;
 
     void deleteMessagesByIds(List<Long> msgids);
 
+    Message createImgMessage(String imageUrl, Long chatId) throws UserException, ChatException;
 }

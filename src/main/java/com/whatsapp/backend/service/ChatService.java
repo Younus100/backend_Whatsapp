@@ -12,7 +12,7 @@ public interface ChatService {
 
     Chat createChat(User user, Long userid2) throws UserException;
 
-    Chat findChatById(Long chatId) throws ChatException;
+    Chat findChatById(Long chatId) throws ChatException, UserException;
 
     List<Chat> findAllChatByUser(User user) throws UserException;
 

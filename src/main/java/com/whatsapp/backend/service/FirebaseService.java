@@ -48,6 +48,8 @@ public class FirebaseService {
         Blob blob = storage.create(blobInfo, file.getBytes());
 
         // Get the public URL of the uploaded file
+
+        System.out.println("FileName:"+fileName);
         return fileName;
 //        return "";
     }

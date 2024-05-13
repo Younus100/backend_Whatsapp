@@ -42,7 +42,7 @@ public class ChatController {
     }
 
     @GetMapping("/{chatId}")
-    public ResponseEntity<Chat> getChatById(@PathVariable Long chatId)  throws  ChatException{
+    public ResponseEntity<Chat> getChatById(@PathVariable Long chatId) throws ChatException, UserException {
         Chat chat = chatService.findChatById(chatId);
         return new ResponseEntity<>(chat, HttpStatus.OK);
     }
@@ -63,6 +63,7 @@ public class ChatController {
             System.out.println("Nululll");
         }
         Chat createdGroup = chatService.createGroup(request, user);
+
         return new ResponseEntity<>(createdGroup, HttpStatus.CREATED);
     }
 

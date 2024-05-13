@@ -6,10 +6,13 @@ import com.whatsapp.backend.exception.UserException;
 import com.whatsapp.backend.model.Chat;
 import com.whatsapp.backend.model.User;
 import com.whatsapp.backend.repository.ChatRepository;
+import com.whatsapp.backend.repository.UserRepository;
 import com.whatsapp.backend.request.GroupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +23,9 @@ public class ChatServiceImpl implements ChatService{
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Chat createChat(User user, Long userid2) throws UserException {
@@ -35,20 +41,29 @@ public class ChatServiceImpl implements ChatService{
         chat.getUsers().add(receiver);
         chat.getUsers().add(user);
         chat.setGroup(false);
+        chat.setLastMessageSentAt(LocalDateTime.MAX);
         chatRepository.save(chat);
         return  chat;
     }
 
     @Override
-    public Chat findChatById(Long chatId) throws ChatException {
+    public Chat findChatById(Long chatId) throws ChatException, UserException {
         Optional<Chat> chat = chatRepository.findById(chatId);
-        if(chat.isPresent()) { return chat.get(); }
+        if(chat.isPresent()) {
+            User user = SecurityUtils.getCurrentUser(userService);
+            user.getUnreadMessages().remove(chat.get().getId());
+            userRepository.save(user);
+            return chat.get(); }
         else { throw new ChatException("Chat is not present eiwith chatId"+ chatId);  }
+
     }
 
     @Override
     public List<Chat> findAllChatByUser(User user) throws UserException {
         List<Chat> chats = chatRepository.findChatByUser(user);
+        // Sort the chats based on lastMessageSentAt in decreasing order
+        try{chats.sort(Comparator.comparing(Chat::getLastMessageSentAt).reversed()); }
+        catch (Exception e){ return chats; }
         return chats;
     }
 
@@ -66,6 +81,7 @@ public class ChatServiceImpl implements ChatService{
                 chat.getUsers().add(member);
             }
         }
+        chat.setLastMessageSentAt(LocalDateTime.MAX);
         chatRepository.save(chat);
         return chat;
     }
@@ -78,6 +94,7 @@ public class ChatServiceImpl implements ChatService{
         if(member==null) { throw new UserException("USr is not present") ; }
         Chat c = chat.get();
         c.getUsers().add(member);
+        c.setLastMessageSentAt(LocalDateTime.now());
         chatRepository.save(c);
         return c;
     }

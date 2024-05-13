@@ -25,7 +25,9 @@ public class Chat {
 
    private boolean isGroup;
 
-   @ManyToOne
+    private LocalDateTime lastMessageSentAt; // Attribute for last time a message is sent
+
+    @ManyToOne
     private User createdBy;
 
    @ManyToMany
