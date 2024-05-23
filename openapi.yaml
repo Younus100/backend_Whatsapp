@@ -1,0 +1,30 @@
+openapi: 3.0.3
+info:
+  title: WhatsApp Backend API
+  description: >-
+    This is the API specification for the WhatsApp backend application.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080  # Update the URL to match your Spring Boot application
+
+tags:
+  - name: welcome
+    description: Welcome message endpoint
+
+paths:
+  /:
+    get:
+      summary: Welcome Message
+      operationId: WelcomeMessage
+      tags:
+        - welcome
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            text/plain:
+              schema:
+                type: string
+
+components:
+  schemas: {}

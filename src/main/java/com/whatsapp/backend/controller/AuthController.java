@@ -19,12 +19,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -76,6 +74,7 @@ public class AuthController {
         authResponse.setMsg("SignUp Success");
         authResponse.setFullName(user.getFullName());
         authResponse.setProfilepic(user.getProfilePicture());
+        authResponse.setUnreadMessages(user.getUnreadMessages());
         return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.CREATED);
     }
 
@@ -94,6 +93,7 @@ public class AuthController {
         authResponse.setMsg("SignIn Success");
         authResponse.setFullName(user.getFullName());
         authResponse.setProfilepic(user.getProfilePicture());
+        authResponse.setUnreadMessages(user.getUnreadMessages());
         return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.OK);
     }
 
@@ -103,8 +103,16 @@ public class AuthController {
         if(!passwordEncoder.matches(password,userDetails.getPassword())) {
             throw  new BadCredentialsException("Invalid Password...");
         }
-
         return new UsernamePasswordAuthenticationToken(userDetails,null);
+    }
+
+    @GetMapping("/getUser")
+    public ResponseEntity<AuthResponse>  getUserDetails() throws UserException {
+        User user = SecurityUtils.getCurrentUser(userService);
+        AuthResponse authResponse = new AuthResponse();
+        Map<Long, Integer> unreadMessages = user.getUnreadMessages();
+        authResponse.setUnreadMessages(unreadMessages);
+        return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.CREATED);
     }
 
 }

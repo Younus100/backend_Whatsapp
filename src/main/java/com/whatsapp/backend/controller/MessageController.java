@@ -31,6 +31,7 @@ public class MessageController {
             Message createdMessage = messageService.createMessage(request);
             return new ResponseEntity<>(createdMessage, HttpStatus.CREATED);
         } catch (UserException | ChatException e) {
+            System.out.println("zzzzz");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
