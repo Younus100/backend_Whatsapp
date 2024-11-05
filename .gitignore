@@ -32,5 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-# Firebase configuration file
-config/
+
