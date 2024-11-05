@@ -23,7 +23,7 @@ This repository contains the backend code for a **Real Chat Application** that p
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/real-chat-backend.git
+   git clone https://github.com/Younus100/backend_Whatsapp.git
    cd real-chat-backend
 
 2. **Build the Project: You can either use Maven or Gradle to build the project**:
